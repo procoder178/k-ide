@@ -1,5 +1,6 @@
 # Environment
 > Ubuntu (can proot-distro)
+*Recommended:* modded-ubuntu from GitHub In termux
 
 # Python Modules
 1. PyQt5 (python3-pyqt5) => 5.15.11

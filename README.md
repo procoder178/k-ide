@@ -24,6 +24,18 @@
 
 This Requires Ubuntu Environment
 <br>
-This Also Requires Many And Heavy Dependencies. Check Requirement.txt To See it
+This Also Requires Too Many And Heavy Dependencies. Check Requirement.txt To See it
+
+## UpComing Features
+
+1. Languages Support
+	- C#
+	- Ruby
+	- Rust
+	- Markdown
+	- JSON
+2. Qt And PyQt Project build and run support
+3. song/music support (for better experience)
+4. clone project from git
 
 ---
