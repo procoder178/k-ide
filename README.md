@@ -93,7 +93,7 @@ This Also Requires Too Many And Heavy Dependencies. Check [Requirement.md](./Req
 	- `chmod +x packages.sh`
 	- `sudo bash packages.sh`
 3. install addition modules
-	- `sudo pip3 install -r requirement.txt`
+	- `sudo pip3 install -r requirement.txt --break-system-packages`
 
 ### Run Code
 

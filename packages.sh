@@ -1,6 +1,6 @@
 sudo apt update
 sudo apt upgrade -y
-sudo apt install python3 python3-dev python3-pip3 -y
+sudo apt install python3 python3-dev python3-pip -y
 sudo apt install tidy -y
 sudo apt install lua5.4 -y
 sudo apt install build-essential -y
