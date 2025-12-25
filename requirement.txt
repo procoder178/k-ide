@@ -1,0 +1,4 @@
+black==25.11.0
+isort==6.0.1
+pyqtdarktheme==0.1.7
+QtAwesome==1.4.0
