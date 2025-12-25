@@ -24,7 +24,7 @@
 
 This Requires Ubuntu Environment
 <br>
-This Also Requires Too Many And Heavy Dependencies. Check Requirement.txt To See it
+This Also Requires Too Many And Heavy Dependencies. Check [Requirement.md](./Requirement.md) To See it
 
 ## UpComing Features
 
