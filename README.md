@@ -26,7 +26,7 @@
 
 This Requires Ubuntu Environment
 <br>
-This Also Requires Too Many And Heavy Dependencies. Check [Installation Section](Installation And Setup) To See it
+This Also Requires Too Many And Heavy Dependencies. Check [Installation Section](#installation-and-setup) To See it
 
 ## Upcoming Features
 
