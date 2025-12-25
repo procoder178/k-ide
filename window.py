@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.root_dir = os.getcwd()
         
         self.setWindowTitle("Code Editor")
-        self.setWindowIcon(QIcon(os.path.join(self.root_dir,"icons/editor.png")))
+        self.setWindowIcon(QIcon(os.path.join(self.root_dir,"assets/editor.png")))
         self.setFixedSize(1200, 700)
         cw(self)
 

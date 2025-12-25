@@ -1,5 +1,7 @@
 # Krish Integrated Development Environment
 
+![OverView](assets/overview.jpg)
+
 > This is A code editor/IDE made with `PyQt5` and `Qscintilla`
 
 ## Editor Features
