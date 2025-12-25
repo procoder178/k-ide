@@ -37,10 +37,9 @@ from utils.terminal import TerminalWidget
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.root_dir = os.getcwd()
-        
+
         self.setWindowTitle("Code Editor")
-        self.setWindowIcon(QIcon(os.path.join(self.root_dir,"assets/editor.png")))
+        self.setWindowIcon(QIcon("assets/editor.png"))
         self.setFixedSize(1200, 700)
         cw(self)
 
@@ -238,7 +237,7 @@ class MainWindow(QMainWindow):
     def get_icon(self, lang):
         icon = QIcon()
         for size in (16, 24, 32):
-            icon.addFile(os.path.join(self.root_dir, f"icons/{lang}/{lang}_{size}.png"))
+            icon.addFile(f"icons/{lang}/{lang}_{size}.png")
         return icon
 
     def pick_color(self):
