@@ -33,6 +33,7 @@ from utils.center_window import cw
 from utils.color_picker import open_color_picker
 from utils.formatter import format_code
 from utils.terminal import TerminalWidget
+from utils.music_player import MusicPlayer
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -112,6 +113,7 @@ class MainWindow(QMainWindow):
         file_menu = menubar.addMenu("File")
         edit_menu = menubar.addMenu("Edit")
         build_menu = menubar.addMenu("Build")
+        tool_menu = menubar.addMenu("Tools")
 
         new_file_menu = QMenu("New File", self)
         new_python_file_action = QAction(
@@ -164,6 +166,7 @@ class MainWindow(QMainWindow):
         run_code_action = QAction(
             icon("fa5s.play", color="#04E216"), "Run", self
         )
+        open_music_player_action = QAction(icon("fa5s.music", color="#26A0DA"), "Music Player", self)
 
         new_python_file_action.triggered.connect(lambda: self.add_tab())
         new_java_file_action.triggered.connect(
@@ -195,6 +198,7 @@ class MainWindow(QMainWindow):
         arrange_code_action.triggered.connect(self.arrange_code)
         color_picker_action.triggered.connect(self.pick_color)
         run_code_action.triggered.connect(self.run_code)
+        open_music_player_action.triggered.connect(self.open_music_player)
 
         open_file_action.setShortcut("Ctrl+O")
         open_folder_action.setShortcut("Shift+Ctrl+O")
@@ -208,6 +212,7 @@ class MainWindow(QMainWindow):
         exit_action.setShortcut("Ctrl+Q")
         arrange_code_action.setShortcut("F1")
         color_picker_action.setShortcut("F2")
+        open_music_player_action.setShortcut("F4")
         run_code_action.setShortcut("F5")
 
         file_menu.addMenu(new_file_menu)
@@ -231,8 +236,9 @@ class MainWindow(QMainWindow):
         edit_menu.addSeparator()
         edit_menu.addActions([select_all_action, undo_action, redo_action])
         build_menu.addActions(
-            [arrange_code_action, color_picker_action, run_code_action]
+            [arrange_code_action, run_code_action]
         )
+        tool_menu.addActions([color_picker_action, open_music_player_action])
 
     def get_icon(self, lang):
         icon = QIcon()
@@ -248,6 +254,11 @@ class MainWindow(QMainWindow):
                 editor.insert(color)
                 line, idx = editor.getCursorPosition()
                 editor.setCursorPosition(line, idx + len(color))
+
+    def open_music_player(self):
+        player = MusicPlayer()
+        player.show()
+        player.raise_()
 
     def control_tree(self, index: QModelIndex):
         if self.model.isDir(index):

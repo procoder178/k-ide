@@ -1,8 +1,20 @@
 # Krish Integrated Development Environment
 
-![OverView](assets/overview.jpg)
+<p align="center">  
+<img src="./assets/overview.jpg">  
+</p>  
+<p align="center">  
+<img src="https://img.shields.io/badge/MADE%20IN-INDIA-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
+</p>  
+<p align="center">  
+<img src="https://img.shields.io/badge/Written%20In-Python-lightblue?style=flat-square">  
+<img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">  
+<img src="https://img.shields.io/github/stars/procoder178/k-ide?style=flat-square">  
+<img src="https://img.shields.io/github/issues/procoder178/k-ide?color=red&style=flat-square">  
+<img src="https://img.shields.io/github/forks/procoder178/k-ide?color=teal&style=flat-square">  
+</p>
 
-> This is A code editor/IDE made with `PyQt5` and `Qscintilla`
+> This simple lightweight code editor made with `PyQt5` and `Qscintilla`
 
 ## Editor Features
 
