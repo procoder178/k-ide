@@ -1,7 +1,8 @@
 # Environment
 > Ubuntu (can proot-distro)
-*Recommended:* [modded-ubuntu](https://github.com/modded-ubuntu/modded-ubuntu.git) from GitHub
-*Important:* Install [Termux](https://f-droid.org/en/packages/com.termux/) from f-droid
+**Recommended:** [modded-ubuntu](https://github.com/modded-ubuntu/modded-ubuntu.git) from GitHub
+<br>
+**Important:** Install [Termux](https://f-droid.org/en/packages/com.termux/) from f-droid
 
 # Python Modules
 1. PyQt5 (python3-pyqt5) => 5.15.11
