@@ -12,7 +12,7 @@
 - Auto Suggestion And Completion
 - Code Folding
 
-## Additional Featurea
+## Additional Features
 
 - Multi-Tab System
 - All File Operations (New File, Open File, Save File, Open Folder)
@@ -28,7 +28,7 @@ This Requires Ubuntu Environment
 <br>
 This Also Requires Too Many And Heavy Dependencies. Check [Requirement.md](./Requirement.md) To See it
 
-## UpComing Features
+## Upcoming Features
 
 1. Languages Support
 	- C#
@@ -93,7 +93,7 @@ This Also Requires Too Many And Heavy Dependencies. Check [Requirement.md](./Req
 	- `chmod +x packages.sh`
 	- `sudo bash packages.sh`
 3. install addition modules
-	- `sudo pip3 -r install requirement.txt`
+	- `sudo pip3 install -r requirement.txt`
 
 ### Run Code
 
