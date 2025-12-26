@@ -33,6 +33,7 @@
 - Run System
 - Arrange Code For Python And Html
 - Built-in Terminal, Color Picker, Browser (QWebEngine)
+- Music Player
 
 ## Tech Stack
 
