@@ -34,6 +34,17 @@
 - Arrange Code For Python And Html
 - Built-in Terminal, Color Picker, Browser (QWebEngine)
 
+## Tech Stack
+
+- `Python` -> easy-syntax language
+	- `PyQt5` -> Best GUI Frameword (Desktop-Applications), Qt (`C++`) binding
+	- `Qscintilla` -> Package for code editor, all built-in features
+	- `QWebEngine` -> Web Browser Package
+	- `qtawesome` -> FontAwesome-5 Solid Icons
+	- `pyqtdarktheme` -> For Dark Theme
+	- `vlc` -> For Music Player system
+	- `gi (GTk)` -> Linux Module `C++` GTk binding in python `PyGObject`
+
 ## Notes
 
 This Requires Ubuntu Environment

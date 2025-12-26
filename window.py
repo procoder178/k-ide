@@ -535,6 +535,8 @@ class MainWindow(QMainWindow):
                     with open(file_path, "w") as f:
                         f.write(text)
                     editor.setText(open(file_path, "r").read())
+                    self.tabs.setTabText(self.tabs.currentIndex(), os.path.basename(file_path))
+                    self.files[file_path] = [os.path.basename(file_path), self.tabs.currentIndex()]
 
             else:
                 file_path = self.get_file_path(self.tabs.tabText(self.tabs.currentIndex()))
