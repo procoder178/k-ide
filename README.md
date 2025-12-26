@@ -113,4 +113,7 @@ This Also Requires Too Many And Heavy Dependencies. Check [Installation Section]
 2. run code
 	- `python3 main.py &`
 
+###	License
+This project is licensed under the MIT License.
+
 ---

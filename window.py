@@ -269,13 +269,13 @@ class MainWindow(QMainWindow):
         else:
             file_path = self.model.filePath(index)
             files_path = []
-            for f in self.files.values():
-                files_path.append(f[0])
+            for f in self.files.keys():
+                files_path.append(f)
             if file_path not in files_path:
                 self.add_tab(file=file_path)
             else:
                 self.tabs.setCurrentIndex(
-                    self.files[os.path.basename(file_path)][1]
+                    self.files[file_path][1]
                 )
 
     def add_tab(self, file=None, tp="python"):
@@ -355,7 +355,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "java":
                 self.editor = JavaEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -368,7 +368,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "cpp":
                 self.editor = CppEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -381,7 +381,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "html":
                 self.editor = HtmlEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -394,7 +394,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "css":
                 self.editor = CssEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -407,7 +407,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "js":
                 self.editor = JavaScriptEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -420,7 +420,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             elif os.path.basename(file).split(".")[-1] == "lua":
                 self.editor = LuaEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
@@ -433,7 +433,7 @@ class MainWindow(QMainWindow):
                 )
                 self.tabs.setCurrentIndex(tab_idx)
                 self.update_status_bar()
-                self.files[os.path.basename(file)] = [file, tab_idx]
+                self.files[file] = [os.path.basename(file), tab_idx]
             else:
                 QMessageBox.critical(
                     self,
@@ -500,13 +500,13 @@ class MainWindow(QMainWindow):
         if dialog.exec():
             file_path = dialog.selectedFiles()[0]
             files_path = []
-            for f in self.files.values():
-                files_path.append(f[0])
+            for f in self.files.keys():
+                files_path.append(f)
             if file_path not in files_path:
                 self.add_tab(file=file_path)
             else:
                 self.tabs.setCurrentIndex(
-                    self.files[os.path.basename(file_path)][1]
+                    self.files[file_path][1]
                 )
 
     def save_file(self):
@@ -532,15 +532,12 @@ class MainWindow(QMainWindow):
                 )
                 if dialog.exec():
                     file_path = dialog.selectedFiles()[0]
-                    text = self.format_code(text)
                     with open(file_path, "w") as f:
                         f.write(text)
                     editor.setText(open(file_path, "r").read())
 
             else:
-                file_path = self.files[
-                    self.tabs.tabText(self.tabs.currentIndex())
-                ][0]
+                file_path = self.get_file_path(self.tabs.tabText(self.tabs.currentIndex()))
                 with open(file_path, "w") as f:
                     f.write(editor.text())
                 editor.setText(open(file_path, "r").read())
@@ -577,6 +574,12 @@ class MainWindow(QMainWindow):
         editor = self.get_current_editor()
         if editor is not None:
             editor.selectAll()
+            
+    def get_file_path(self, name):
+        for k, v in self.files.items():
+            if name == v[0]:
+                return k
+        return None
 
     def arrange_code(self):
         tab_name = self.tabs.tabText(self.tabs.currentIndex())
@@ -590,14 +593,17 @@ class MainWindow(QMainWindow):
         elif code_ext == "html":
             editor = self.get_current_editor()
             if editor is not None:
-                file_path = self.files[tab_name][0]
-                subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
-                editor.setText(open(file_path, "r").read())
+                file_path = self.get_file_path(tab_name)
+                if file_path is not None:
+                    subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
+                    editor.setText(open(file_path, "r").read())
+                else:
+                    QMessageBox.critical(self, "File Not Found", "404 - File Not Found")
         else:
             QMessageBox.warning(
                 self,
                 "Arrange Code",
-                "Arrange Code feature is only supported for Python",
+                "Arrange Code feature is only supported for Python and HTML",
             )
 
     def run_code(self):
@@ -617,7 +623,7 @@ class MainWindow(QMainWindow):
                         ]
                     )
                 else:
-                    file_path = self.files[tab_name][0]
+                    file_path = self.get_file_path(tab_name)
                     subprocess.Popen(
                         [
                             "xfce4-terminal",
@@ -627,9 +633,8 @@ class MainWindow(QMainWindow):
                         ]
                     )
             elif ext == "java":
-                file_path = self.files.get(tab_name, None)
+                file_path = self.get_file_path(tab_name)
                 if file_path is not None:
-                    file_path = file_path[0]
                     cls_name = self.get_java_class_name(file_path)
                     parts = file_path.split("/")
                     parts[0] = "/"
@@ -650,9 +655,8 @@ class MainWindow(QMainWindow):
                         self, "File Not Found", "404 - File Not Found"
                     )
             elif ext == "cpp":
-                file_path = self.files.get(tab_name, None)
+                file_path = self.get_file_path(tab_name)
                 if file_path is not None:
-                    file_path = file_path[0]
                     parts = file_path.split("/")
                     bin_file = tab_name.split(".")[0]
                     parts[0] = "/"
@@ -675,9 +679,8 @@ class MainWindow(QMainWindow):
                         self, "File Not Found", "404 - File Not Found"
                     )
             elif ext == "html":
-                file_path = self.files.get(tab_name, None)
+                file_path = self.get_file_path(tab_name)
                 if file_path is not None:
-                    file_path = file_path[0]
                     cmd = f"python3 utils/browser.py {file_path} &"
                     subprocess.Popen(cmd.split())
                 else:
@@ -685,9 +688,8 @@ class MainWindow(QMainWindow):
                         self, "File Not Found", "404 - File Not Found"
                     )
             elif ext == "lua":
-                file_path = self.files.get(tab_name, None)
+                file_path = self.get_file_path(tab_name)
                 if file_path is not None:
-                    file_path = file_path[0]
                     subprocess.Popen(
                         [
                             "xfce4-terminal",
