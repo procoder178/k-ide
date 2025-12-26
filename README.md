@@ -9,7 +9,11 @@
 <p align="center">
 <img src="https://img.shields.io/badge/Made%20By-Krish-cyan?style=flat-square">
 <img src="https://img.shields.io/badge/Written%20In-Python-lightblue?style=flat-square">  
+</p>
+<p align="center">
 <img src="https://img.shields.io/badge/Open%20Source-Yes-darkviolet?style=flat-square">  
+</p>
+<p align="center">
 <img src="https://img.shields.io/github/stars/procoder178/k-ide?style=flat-square">  
 <img src="https://img.shields.io/github/issues/procoder178/k-ide?color=red&style=flat-square">  
 <img src="https://img.shields.io/github/forks/procoder178/k-ide?color=teal&style=flat-square">  
