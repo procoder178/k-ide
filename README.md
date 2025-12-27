@@ -132,6 +132,6 @@ This Also Requires Too Many And Heavy Dependencies. Check [Installation Section]
 ###	License
 This project is licensed under the MIT License.
 
-## If you like the project, don't forget to leave a start
+## If you like the project, don't forget to leave a star
 
 ---
