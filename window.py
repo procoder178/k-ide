@@ -34,6 +34,9 @@ from utils.color_picker import open_color_picker
 from utils.formatter import format_code
 from utils.terminal import TerminalWidget
 from utils.music_player import MusicPlayer
+from dialogs.open_file import OpenFileDialog
+from dialogs.open_folder import OpenFolderDialog
+from dialogs.save_file import SaveFileDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -41,7 +44,9 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Code Editor")
         self.setWindowIcon(QIcon("assets/editor.png"))
-        self.setFixedSize(1200, 700)
+        width = self.screen().availableGeometry().width()
+        height = self.screen().availableGeometry().height()
+        self.setFixedSize(width, height)
         cw(self)
 
         self.files = {}
@@ -50,8 +55,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central)
 
         self.tree_area = QFrame()
-        self.tree_area.setFixedWidth(280)
-        self.tree_area.setFixedHeight(450)
+        self.tree_area.setFixedWidth((width // 4) - 10)
+        self.tree_area.setFixedHeight((height * 64) // 100)
 
         self.path_label = QLabel("Home (Ubuntu)")
         self.path_label.setFont(QFont("Consolas", 10, QFont.Bold))
@@ -72,15 +77,15 @@ class MainWindow(QMainWindow):
         self.tree.clicked.connect(self.control_tree)
 
         self.main_area = QFrame()
-        self.main_area.setFixedWidth(920)
-        self.main_area.setFixedHeight(450)
+        self.main_area.setFixedWidth(((width * 3) // 4) - 10)
+        self.main_area.setFixedHeight((height * 64) // 100)
 
         self.tabs = QTabWidget()
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.remove_tab)
 
         self.term = TerminalWidget()
-        self.term.setFixedHeight(120)
+        self.term.setFixedHeight((height * 16) // 100)
 
         py_layout = QVBoxLayout()
         layout = QHBoxLayout()
@@ -459,17 +464,7 @@ class MainWindow(QMainWindow):
             self.status_label.setText("Word: 0 | Character: 0")
 
     def open_folder(self):
-        dialog = QFileDialog(self, "Open Folder")
-        dialog.setFileMode(QFileDialog.Directory)
-        dialog.setOption(QFileDialog.ShowDirsOnly, True)
-        dialog.setSidebarUrls(
-            [
-                QUrl.fromLocalFile("/home/krish"),
-                QUrl.fromLocalFile("/storage/emulated/0"),
-                QUrl.fromLocalFile("/data/data/com.termux/files/home"),
-                QUrl.fromLocalFile("/"),
-            ]
-        )
+        dialog = OpenFolderDialog(parent=self)
         if dialog.exec():
             path = dialog.selectedFiles()[0]
             lbl = ""
@@ -487,16 +482,7 @@ class MainWindow(QMainWindow):
             self.tree.setRootIndex(self.model.index(path))
 
     def open_file(self):
-        dialog = QFileDialog(self, "Open File")
-        dialog.setFileMode(QFileDialog.ExistingFile)
-        dialog.setSidebarUrls(
-            [
-                QUrl.fromLocalFile("/home/krish"),
-                QUrl.fromLocalFile("/storage/emulated/0"),
-                QUrl.fromLocalFile("/data/data/com.termux/files/home"),
-                QUrl.fromLocalFile("/"),
-            ]
-        )
+        dialog = OpenFileDialog(parent=self)
         if dialog.exec():
             file_path = dialog.selectedFiles()[0]
             files_path = []
@@ -517,19 +503,7 @@ class MainWindow(QMainWindow):
                 == "Untitled"
             ):
                 text = editor.text()
-                dialog = QFileDialog(self, "Save File")
-                dialog.setAcceptMode(QFileDialog.AcceptSave)
-                dialog.setFileMode(QFileDialog.AnyFile)
-                dialog.setSidebarUrls(
-                    [
-                        QUrl.fromLocalFile("/home/krish"),
-                        QUrl.fromLocalFile("/storage/emulated/0"),
-                        QUrl.fromLocalFile(
-                            "/data/data/com.termux/files/home"
-                        ),
-                        QUrl.fromLocalFile("/"),
-                    ]
-                )
+                dialog = SaveFileDialog(parent=self)
                 if dialog.exec():
                     file_path = dialog.selectedFiles()[0]
                     with open(file_path, "w") as f:
