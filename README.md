@@ -66,7 +66,8 @@ This Also Requires Too Many And Heavy Dependencies. Check [Installation Section]
 	- Markdown
 	- JSON
 2. Qt And PyQt Project build and run support
-3. clone project from git
+3. Error Tracking
+4. clone project from git
 
 # Installation And Setup
 
