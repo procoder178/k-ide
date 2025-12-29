@@ -9,7 +9,7 @@ from editors.java_editor import JavaEditorTextArea
 from editors.js_editor import JavaScriptEditorTextArea
 from editors.lua_editor import LuaEditorTextArea
 from editors.python_editor import PythonEditorTextArea
-from PyQt5.QtCore import QDir, QModelIndex, Qt, QUrl
+from PyQt5.QtCore import QDir, QModelIndex, Qt, QUrl, QSize
 from PyQt5.QtGui import QFont, QIcon, QKeyEvent
 from PyQt5.QtWidgets import (
     QAction,
@@ -26,6 +26,7 @@ from PyQt5.QtWidgets import (
     QTreeView,
     QVBoxLayout,
     QWidget,
+    QToolBar
 )
 from qtawesome import icon
 from utils.boiler_plates import cpp_plate, html_plate, java_plate
@@ -37,6 +38,7 @@ from utils.music_player import MusicPlayer
 from dialogs.open_file import OpenFileDialog
 from dialogs.open_folder import OpenFolderDialog
 from dialogs.save_file import SaveFileDialog
+from dialogs.browse_dialog import OpenBrowserDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -110,9 +112,9 @@ class MainWindow(QMainWindow):
 
         self.tabs.currentChanged.connect(self.on_tab_changed)
 
-        self.initMenu()
+        self.init_menu_and_tool_bar()
 
-    def initMenu(self):
+    def init_menu_and_tool_bar(self):
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("File")
@@ -219,6 +221,10 @@ class MainWindow(QMainWindow):
         color_picker_action.setShortcut("F2")
         open_music_player_action.setShortcut("F4")
         run_code_action.setShortcut("F5")
+        
+        open_browser_action = QAction(QIcon("assets/web_browser.png"), "Open Browser", self)
+        open_browser_action.setShortcut("F3")
+        open_browser_action.triggered.connect(self.open_browser)
 
         file_menu.addMenu(new_file_menu)
         new_file_menu.addActions(
@@ -243,7 +249,47 @@ class MainWindow(QMainWindow):
         build_menu.addActions(
             [arrange_code_action, run_code_action]
         )
-        tool_menu.addActions([color_picker_action, open_music_player_action])
+        tool_menu.addActions([color_picker_action, open_music_player_action, open_browser_action])
+
+        self.toolbar = QToolBar("K-Tool-Bar")
+        self.toolbar.setIconSize(QSize(25, 25))
+        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
+        self.toolbar.setMovable(False)
+        self.toolbar.setFloatable(False)
+        
+        new_file_tool_bar_action = QAction(icon("fa5s.file", color="#B2FCFF"), "New File", self)
+        new_file_tool_bar_action.triggered.connect(self.create_and_open_file)
+        
+        self.toolbar.addAction(new_file_tool_bar_action)
+        self.toolbar.addActions([open_file_action, open_folder_action, save_file_action])
+        self.toolbar.addSeparator()
+        self.toolbar.addActions([cut_action, copy_action, paste_action])
+        self.toolbar.addSeparator()
+        self.toolbar.addActions([select_all_action, undo_action, redo_action])
+        self.toolbar.addSeparator()
+        self.toolbar.addActions([arrange_code_action, run_code_action])
+        self.toolbar.addSeparator()
+        self.toolbar.addActions([color_picker_action, open_music_player_action, open_browser_action])
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(exit_action)
+        
+    def create_and_open_file(self):
+        dialog = SaveFileDialog(parent=self, title="Create File")
+        if dialog.exec_():
+            file_path = dialog.selectedFiles()[0]
+            if os.path.basename(file_path).split(".")[-1] == "java":
+                open(file_path, "w").write("\n".join(java_plate))
+            elif os.path.basename(file_path).split(".")[-1] == "cpp":
+                open(file_path, "w").write("\n".join(cpp_plate))
+            elif os.path.basename(file_path).split(".")[-1] == "html":
+                open(file_path, "w").write("\n".join(html_plate))
+            else:
+                open(file_path, "w").write("")
+            self.add_tab(file=file_path)
+            
+    def open_browser(self):
+        self.browser = OpenBrowserDialog()
+        self.browser.show()
 
     def get_icon(self, lang):
         icon = QIcon()
@@ -283,9 +329,9 @@ class MainWindow(QMainWindow):
                     self.files[file_path][1]
                 )
 
-    def add_tab(self, file=None, tp="python"):
+    def add_tab(self, file=None, tp="py"):
         if file is None:
-            if tp == "python":
+            if tp == "py":
                 self.editor = PythonEditorTextArea()
                 self.editor.textChanged.connect(self.update_status_bar)
 
@@ -447,8 +493,11 @@ class MainWindow(QMainWindow):
                 )
 
     def remove_tab(self, index):
-        if self.tabs.tabText(index) in self.files.keys():
-            del self.files[self.tabs.tabText(index)]
+        all_files = []
+        for k, v in self.files.items():
+            all_files.append(v[0])
+        if self.tabs.tabText(index) in all_files:
+            del self.files[self.get_file_path(self.tabs.tabText(index))]
         self.tabs.removeTab(index)
 
     def on_tab_changed(self, index):
@@ -507,7 +556,12 @@ class MainWindow(QMainWindow):
                 if dialog.exec():
                     file_path = dialog.selectedFiles()[0]
                     with open(file_path, "w") as f:
-                        f.write(text)
+                        if os.path.basename(file_path).split(".")[-1] == "py":
+                            f.write(format_code(text))
+                        else:
+                            f.write(text)
+                    if os.path.basename(file_path).split(".")[-1] == "html":
+                        subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
                     editor.setText(open(file_path, "r").read())
                     self.tabs.setTabText(self.tabs.currentIndex(), os.path.basename(file_path))
                     self.files[file_path] = [os.path.basename(file_path), self.tabs.currentIndex()]
@@ -516,6 +570,7 @@ class MainWindow(QMainWindow):
                 file_path = self.get_file_path(self.tabs.tabText(self.tabs.currentIndex()))
                 with open(file_path, "w") as f:
                     f.write(editor.text())
+                subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
                 editor.setText(open(file_path, "r").read())
 
     def get_current_editor(self):
