@@ -134,6 +134,7 @@ class MainWindow(QMainWindow):
             self.get_icon("js"), "javaScript", self
         )
         new_lua_file_action = QAction(self.get_icon("lua"), "Lua", self)
+        new_folder_action = QAction(icon("fa5s.folder", color="#B2FCFF"), "New Folder", self)
         open_folder_action = QAction(
             icon("fa5s.folder-open", color="#EE9F00"), "Open Folder", self
         )
@@ -194,6 +195,7 @@ class MainWindow(QMainWindow):
         )
         open_folder_action.triggered.connect(self.open_folder)
         open_file_action.triggered.connect(self.open_file)
+        new_folder_action.triggered.connect(self.create_folder)
         save_file_action.triggered.connect(self.save_file)
         cut_action.triggered.connect(self.cut_text)
         copy_action.triggered.connect(self.copy_text)
@@ -209,6 +211,7 @@ class MainWindow(QMainWindow):
 
         open_file_action.setShortcut("Ctrl+O")
         open_folder_action.setShortcut("Shift+Ctrl+O")
+        new_folder_action.setShortcut("Ctrl+F")
         save_file_action.setShortcut("Ctrl+S")
         cut_action.setShortcut("Ctrl+X")
         copy_action.setShortcut("Ctrl+C")
@@ -239,7 +242,7 @@ class MainWindow(QMainWindow):
             ]
         )
         file_menu.addActions(
-            [open_folder_action, open_file_action, save_file_action]
+            [new_folder_action, open_folder_action, open_file_action, save_file_action]
         )
         file_menu.addSeparator()
         file_menu.addAction(exit_action)
@@ -261,7 +264,7 @@ class MainWindow(QMainWindow):
         new_file_tool_bar_action.triggered.connect(self.create_and_open_file)
         
         self.toolbar.addAction(new_file_tool_bar_action)
-        self.toolbar.addActions([open_file_action, open_folder_action, save_file_action])
+        self.toolbar.addActions([new_folder_action, open_file_action, open_folder_action, save_file_action])
         self.toolbar.addSeparator()
         self.toolbar.addActions([cut_action, copy_action, paste_action])
         self.toolbar.addSeparator()
@@ -272,6 +275,15 @@ class MainWindow(QMainWindow):
         self.toolbar.addActions([color_picker_action, open_music_player_action, open_browser_action])
         self.toolbar.addSeparator()
         self.toolbar.addAction(exit_action)
+        
+    def create_folder(self):
+        dialog = SaveFileDialog(parent=self, title="Create Folder")
+        if dialog.exec_():
+            file_path = dialog.selectedFiles()[0]
+            if os.path.exists(file_path):
+                QMessageBox.critical(self, "Dir Exists", f"{os.path.basename(file_path)} folder is already exists")
+                return
+            os.mkdir(file_path)
         
     def create_and_open_file(self):
         dialog = SaveFileDialog(parent=self, title="Create File")
