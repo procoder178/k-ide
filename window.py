@@ -581,8 +581,12 @@ class MainWindow(QMainWindow):
             else:
                 file_path = self.get_file_path(self.tabs.tabText(self.tabs.currentIndex()))
                 with open(file_path, "w") as f:
-                    f.write(editor.text())
-                subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
+                    if os.path.basename(file_path).split(".")[-1] == "py":
+                        f.write(format_code(editor.text()))
+                    else:
+                        f.write(editor.text())
+                if os.path.basename(file_path).split(".")[-1] == "html":
+                    subprocess.Popen(["tidy", "-i", "-m", f"{file_path}"])
                 editor.setText(open(file_path, "r").read())
 
     def get_current_editor(self):

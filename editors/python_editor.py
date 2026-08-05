@@ -8,7 +8,7 @@ class PythonEditorTextArea(QsciScintilla):
 
     def __init__(self):
         super().__init__()
-        self.font = QFont("Consolas", 15)
+        self.font = QFont("FiraCode Nerd Font", 15)
         self.setFont(self.font)
 
         self.kw = python_keywords
